@@ -1,0 +1,89 @@
+name: Docker-NetLink-build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-1: #流程1
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform: 
+          - { arch: amd64, dockerfile: Dockerfile.amd64, tag: x64 }
+          - { arch: arm64, dockerfile: Dockerfile.arm64, tag: arm64 }
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64,amd64,386,arm
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Download amd64 binary
+        if: ${{ matrix.platform.arch }} == 'amd64'
+        run: |
+          mkdir -p binary/amd64
+          curl -L -o binary/amd64/app.tar.gz \
+          "https://github.com/rustp2p/NetLink/releases/download/0.2.9.1/netlink-x86_64-unknown-linux-musl-0.2.9.1.tar.gz"
+          ls -alh binary/amd64
+
+      - name: Download arm64 binary
+        if: ${{ matrix.platform.arch }} == 'arm64'
+        run: |
+          mkdir -p binary/arm64
+          curl -L -o binary/arm64/app.tar.gz \
+          "https://github.com/rustp2p/NetLink/releases/download/0.2.9.1/netlink-aarch64-unknown-linux-musl-0.2.9.1.tar.gz"
+          ls -alh binary/arm64
+          
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_REGISTRY_USER }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+          
+
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/${{ matrix.platform.arch }}
+          file: ${{ matrix.platform.dockerfile }}
+          tags: haoxuan8855/netlink:${{ matrix.platform.tag }}
+          
+      - name: Logout from Docker Hub
+        run: docker logout
+
+  build-2: #流程2
+    runs-on: ubuntu-latest
+    needs: build-1  # 等待 "build-1" job 完成
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_REGISTRY_USER }}
+        password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+    - name: Build and push Docker images
+      run: |
+        docker pull --platform linux/amd64 haoxuan8855/netlink:x64 && \
+        docker push haoxuan8855/netlink:x64 && \
+        docker pull --platform linux/arm64 haoxuan8855/netlink:arm64 && \
+        docker push haoxuan8855/netlink:arm64 && \
+        docker manifest create haoxuan8855/netlink:latest haoxuan8855/netlink:x64 haoxuan8855/netlink:arm64 && \
+        docker manifest push haoxuan8855/netlink:latest
+
+    - name: Logout from Docker Hub
+      run: docker logout
+ 

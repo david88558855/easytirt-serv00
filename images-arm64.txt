@@ -1,0 +1,1 @@
+--platform=linux/arm64 haoxuan8855/vnt:arm64
