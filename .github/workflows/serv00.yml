@@ -7,12 +7,12 @@ on:
         description: '下载easytier程序包，请输入版本号'
         required: false
         default: ''
-      vnt:
-        description: '下载vnt-cli程序包，请输入版本号'
+      EM:
+        description: '下载easytier-manager ，请输入版本号'
         required: false
         default: ''
-      vnts:
-        description: '下载vnts程序包，请输入版本号'
+      EG:
+        description: '下载EasytierGame ，请输入版本号'
         required: false
         default: ''
   #去掉#注释生效
@@ -20,8 +20,8 @@ on:
     #- cron: '0 */4 * * *'  # 每4小时执行一次，UTC 时间
 env:
   easytier: "${{ github.event.inputs.easytier }}"
-  vnt: "${{ github.event.inputs.vnt }}"
-  vnts: "${{ github.event.inputs.vnts }}"
+  EM: "${{ github.event.inputs.EM }}"
+  EG: "${{ github.event.inputs.EG }}"
   TZ: Asia/Shanghai
 jobs:
   run-ssh-command:
@@ -36,68 +36,50 @@ jobs:
       - name: 下载指定版本easytier
         if: github.event.inputs.easytier != ''
         run: |
+	  tag=$(echo $easytier | tr -d 'v')
           mkdir -p caddy/easytier/$easytier
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/v2.1.1/app-universal-release.apk
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/v2.1.1/easytier-freebsd-13.2-x86_64-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-gui_$easytier_aarch64.dmg
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-gui_$easytier_amd64.AppImage
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-gui_$easytier_amd64.deb
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-gui_$easytier_arm64-setup.exe
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-gui_$easytier_arm64.deb
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-gui_$easytier_x64-setup.exe
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-gui_$easytier_x64.dmg
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-aarch64-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-arm-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-armhf-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-armv7-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-armv7hf-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-mips-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-mipsel-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-linux-x86_64-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-macos-aarch64-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-macos-x86_64-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-windows-arm64-$easytier.zip
-          wget -q -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/$easytier/easytier-windows-x86_64-$easytier.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/app-universal-release.apk
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-freebsd-13.2-x86_64-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-gui_${tag}_aarch64.dmg
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-gui_${tag}_amd64.AppImage
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-gui_${tag}_amd64.deb
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-gui_${tag}_arm64-setup.exe
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-gui_${tag}_arm64.deb
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-gui_${tag}_x64-setup.exe
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-gui_${tag}_x64.dmg
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-aarch64-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-arm-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-armhf-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-armv7-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-armv7hf-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-mips-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-mipsel-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-linux-x86_64-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-macos-aarch64-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-macos-x86_64-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-windows-arm64-${easytier}.zip
+          wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-windows-x86_64-${easytier}.zip
 
-      - name: 下载指定版本vnt-cli
-        if: github.event.inputs.vnt != ''
+      - name: 下载指定版本easytier-manager
+        if: github.event.inputs.EM != ''
         run: |
-          mkdir -p caddy/vnt-cli/$vnt
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli-386-docker.tar
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli-arm64-docker.tar
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli-armv5-docker.tar
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli-armv7-docker.tar
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_aarch64-unknown-linux-musl
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_arm-unknown-linux-musleabi
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_arm-unknown-linux-musleabihf
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_armv7-unknown-linux-musleabi
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_armv7-unknown-linux-musleabihf
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_ddwrt-arm_cortex-a9
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_mips-unknown-linux-musl
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli_mipsel-unknown-linux-musl
-          wget -q -c -P caddy/vnt-cli/$vnt https://github.com/lmq8267/vnt-cli/releases/download/$vnt/vnt-cli-x86_64-docker.tar
+	  tag=$(echo $EM | tr -d 'v')
+          mkdir -p caddy/easytier-manager/$EM
+	  wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro.zip
+	  wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro_${tag}_x64_zh-CN.msi
+          wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro_${tag}_x64-setup.exe
 
-      - name: 下载指定版本vnts
-        if: github.event.inputs.vnts != ''
+      - name: 下载指定版本EasytierGame
+        if: github.event.inputs.EG != ''
         run: |
-          mkdir -p caddy/vnts/$vnts
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts-arm64-docker.tar
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts-armv5-docker.tar
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts-armv7-docker.tar
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts-x86_64-docker.tar
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_aarch64-unknown-linux-musl
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_arm-unknown-linux-musleabi
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_arm-unknown-linux-musleabihf
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_armv7-unknown-linux-musleabi
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_armv7-unknown-linux-musleabihf
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_mips-unknown-linux-musl
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_mipsel-unknown-linux-musl
-          wget -q -c -P caddy/vnts/$vnts https://github.com/lmq8267/vnts/releases/download/$vnts/vnts_x86_64-unknown-linux-musl
+          mkdir -p caddy/EasytierGame/$EG
+          wget -c -P caddy/EasytierGame/$EG https://github.com/EasyTier/EasytierGame/releases/download/${EG}/easytier-game_windows_x86_64_${EG}.zip
           
       - name: 连接SSH并复制文件
         env:
           #读取帐号密码的环境变量
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          #将当前仓库的caddy文件夹里的所有文件通过scp命令复制到目标服务器的/usr/home/lmq8267/opt/caddy/文件夹里
-          sshpass -p ${{ secrets.SSH_PRIVATE_KEY }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r caddy/* lmq8267@s1.ct8.pl:/usr/home/rex2/caddy/
+          #将下载的所有文件通过scp命令复制到目标服务器的/usr/home/rex2/caddy/文件夹里
+          sshpass -p ${{ secrets.SSH_PRIVATE_KEY }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r caddy/* rex2@s1.ct8.pl:/usr/home/rex2/caddy/
+
