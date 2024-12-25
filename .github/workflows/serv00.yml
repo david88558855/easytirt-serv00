@@ -15,28 +15,33 @@ on:
         description: '下载EasytierGame ，请输入版本号'
         required: false
         default: ''
-  #去掉#注释生效
-  #schedule:
-    #- cron: '0 */4 * * *'  # 每4小时执行一次，UTC 时间
+  # 去掉#注释即可生效
+  # schedule:
+  #   - cron: '0 */4 * * *'  # 每4小时执行一次，UTC 时间
+
 env:
   easytier: "${{ github.event.inputs.easytier }}"
   EM: "${{ github.event.inputs.EM }}"
   EG: "${{ github.event.inputs.EG }}"
   TZ: Asia/Shanghai
+
 jobs:
   run-ssh-command:
     runs-on: ubuntu-latest
     steps:
+      # 检出代码
       - name: 检查仓库
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
+      # 安装 sshpass
       - name: 安装 sshpass
         run: sudo apt-get install -y sshpass
 
-      - name: 下载指定版本easytier
-        if: github.event.inputs.easytier != ''
+      # 下载指定版本 easytier
+      - name: 下载指定版本 easytier
+        if: ${{ github.event.inputs.easytier != '' }}
         run: |
-	  tag=$(echo $easytier | tr -d 'v')
+          tag=$(echo $easytier | tr -d 'v')
           mkdir -p caddy/easytier/$easytier
           wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/app-universal-release.apk
           wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-freebsd-13.2-x86_64-${easytier}.zip
@@ -60,26 +65,28 @@ jobs:
           wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-windows-arm64-${easytier}.zip
           wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-windows-x86_64-${easytier}.zip
 
-      - name: 下载指定版本easytier-manager
-        if: github.event.inputs.EM != ''
+
+      # 下载指定版本 easytier-manager
+      - name: 下载指定版本 easytier-manager
+        if: ${{ github.event.inputs.EM != '' }}
         run: |
-	  tag=$(echo $EM | tr -d 'v')
+          tag=$(echo $EM | tr -d 'v')
           mkdir -p caddy/easytier-manager/$EM
-	  wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro.zip
-	  wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro_${tag}_x64_zh-CN.msi
+          wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro.zip
+          wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro_${tag}_x64_zh-CN.msi
           wget -c -P caddy/easytier-manager/$EM https://github.com/xlc520/easytier-manager/releases/download/${EM}/easytier-manager-pro_${tag}_x64-setup.exe
 
-      - name: 下载指定版本EasytierGame
-        if: github.event.inputs.EG != ''
+      # 下载指定版本 EasytierGame
+      - name: 下载指定版本 EasytierGame
+        if: ${{ github.event.inputs.EG != '' }}
         run: |
           mkdir -p caddy/EasytierGame/$EG
           wget -c -P caddy/EasytierGame/$EG https://github.com/EasyTier/EasytierGame/releases/download/${EG}/easytier-game_windows_x86_64_${EG}.zip
-          
+
+      # 连接 SSH 并复制文件
       - name: 连接SSH并复制文件
         env:
-          #读取帐号密码的环境变量
+          # 读取帐号密码的环境变量
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          #将下载的所有文件通过scp命令复制到目标服务器的/usr/home/rex2/caddy/文件夹里
           sshpass -p ${{ secrets.SSH_PRIVATE_KEY }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r caddy/* rex2@s1.ct8.pl:/usr/home/rex2/caddy/
-
