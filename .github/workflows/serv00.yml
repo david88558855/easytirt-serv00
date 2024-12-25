@@ -66,10 +66,10 @@ jobs:
           wget -c -P caddy/easytier/$easytier https://github.com/EasyTier/EasyTier/releases/download/${easytier}/easytier-windows-x86_64-${easytier}.zip
 
           docker pull --platform linux/amd64 easytier/easytier:${{ env.easytier }}
-          docker save -o caddy/easytier/${easytier}/easytier-${{ env.easytier }}-x86_64-docker.tar easytier/easytier:${{ env.easytier }}
+          docker save -o caddy/easytier/${easytier}/easytier-docker-x86_64-${{ env.easytier }}.tar easytier/easytier:${{ env.easytier }}
 
           docker pull --platform linux/arm64 easytier/easytier:${{ env.easytier }}
-          docker save -o caddy/easytier/${easytier}/easytier-${{ env.easytier }}-arm64-docker.tar easytier/easytier:${{ env.easytier }}
+          docker save -o caddy/easytier/${easytier}/easytier-docker-arm64-${{ env.easytier }}.tar easytier/easytier:${{ env.easytier }}
 
       # 下载指定版本 easytier-manager
       - name: 下载指定版本 easytier-manager
