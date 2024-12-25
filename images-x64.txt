@@ -1,1 +1,0 @@
---platform=linux/amd64 haoxuan8855/vnt:x64
