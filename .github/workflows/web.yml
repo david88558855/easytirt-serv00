@@ -98,7 +98,16 @@ jobs:
         run: |
           mkdir guazai && echo "${{ secrets.WEBDAV_PASSWORD }}" | sudo mount -t davfs ${{ secrets.WEBDAV_URL }} ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=${{ secrets.WEBDAV_USERNAME }},password_stdin && cp -r caddy/* guazai/
           
-      - name: Wait for upload cache to finish
+      - name: Wait for copy to finish
         run: |
-          echo "等待上传缓存结束"
-          sleep 60
+          echo "等待文件拷贝到远程文件夹完成"
+          while sudo lsof | grep ./guazai; do
+            echo "正在拷贝中，请等待……"
+            sleep 5
+          done
+          echo "文件拷贝已完成！"
+
+      - name: Unmount WebDAV
+        run: |
+          sudo umount /mnt/webdav
+          echo "卸载 WebDAV 完成，上传流程彻底结束。"
