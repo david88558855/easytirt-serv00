@@ -90,5 +90,6 @@ jobs:
 
       # 上传文件到 WebDAV
       - name: 上传文件到 WebDAV
-        run: |
-          lftp -u admin,q09995 jgw.18999666.xyz:12121 -e "mirror -R ./caddy /; bye"
+        run: |   
+           mkdir guazai && echo "q09995" | sudo mount -t davfs https://hwy.18999666.xyz:5244/dav/99/ /root/55 -o rw,uid=$(id -u),gid=$(id -g),username=admin,password_stdin && cp caddy/* guazai
+
