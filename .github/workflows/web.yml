@@ -109,5 +109,5 @@ jobs:
 
       - name: Unmount WebDAV
         run: |
-          sudo umount /mnt/webdav
+          sudo umount ./guazai
           echo "卸载 WebDAV 完成，上传流程彻底结束。"
