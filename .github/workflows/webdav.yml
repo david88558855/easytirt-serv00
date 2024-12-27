@@ -1,4 +1,4 @@
-name: ssh复制到免费服务器
+name: 复制到webdav
 
 on:
   workflow_dispatch:
