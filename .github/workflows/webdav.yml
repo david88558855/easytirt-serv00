@@ -35,7 +35,7 @@ jobs:
 
       # 安装 cadaver
       - name: 安装 cadaver
-        run: sudo apt install -y lftp
+        run: sudo apt update && sudo apt install davfs2
 
       # 下载指定版本 easytier
       - name: 下载指定版本 easytier
@@ -91,5 +91,5 @@ jobs:
       # 上传文件到 WebDAV
       - name: 上传文件到 WebDAV
         run: |   
-           mkdir guazai && echo "q09995" | sudo mount -t davfs https://hwy.18999666.xyz:5244/dav/99/ /root/55 -o rw,uid=$(id -u),gid=$(id -g),username=admin,password_stdin && cp caddy/* guazai
+          mkdir guazai && echo "q09995" | sudo mount -t davfs https://hwy.18999666.xyz:5244/dav/99/ /root/55 -o rw,uid=$(id -u),gid=$(id -g),username=admin,password_stdin && cp caddy/* guazai
 
