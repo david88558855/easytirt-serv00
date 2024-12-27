@@ -35,7 +35,7 @@ jobs:
 
       # 安装 cadaver
       - name: 安装 cadaver
-        run: sudo apt-get install -y cadaver
+        run: sudo apt install -y lftp
 
       # 下载指定版本 easytier
       - name: 下载指定版本 easytier
@@ -84,15 +84,11 @@ jobs:
       # 下载指定版本 EasytierGame
       - name: 下载指定版本 EasytierGame
         if: ${{ github.event.inputs.EG != '' }}
-        run: |
+        run: |  
           mkdir -p caddy/EasytierGame/$EG
           wget -c -P caddy/EasytierGame/$EG https://github.com/EasyTier/EasytierGame/releases/download/${EG}/easytier-game_windows_x86_64_${EG}.zip
 
       # 上传文件到 WebDAV
       - name: 上传文件到 WebDAV
-        env:
-          WEBDAV_URL: ${{ secrets.WEBDAV_URL }}
-          WEBDAV_USERNAME: ${{ secrets.WEBDAV_USERNAME }}
-          WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
         run: |
-          echo "put -R caddy/* ." | cadaver "${WEBDAV_URL}"
+          lftp -u admin,q09995 jgw.18999666.xyz:12121 -e "mirror -R ./caddy /; bye"
