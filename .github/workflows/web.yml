@@ -33,8 +33,8 @@ jobs:
       - name: 检查仓库
         uses: actions/checkout@v3
 
-      # 安装 sshpass
-      - name: 安装 sshpass
+      # 安装 davfs2
+      - name: 安装 davfs2
         run: sudo apt install -y davfs2
 
       # 下载指定版本 easytier
@@ -92,8 +92,8 @@ jobs:
       - name: 连接SSH并复制文件
         env:
           # 读取帐号密码的环境变量
-          WEBDAV_URL=${{ secrets.WEBDAV_URL }}
-          WEBDAV_USERNAME=${{ secrets.WEBDAV_USERNAME }}
-          WEBDAV_PASSWORD=${{ secrets.WEBDAV_PASSWORD }}
+          WEBDAV_URL: ${{ secrets.WEBDAV_URL }}
+          WEBDAV_USERNAME: ${{ secrets.WEBDAV_USERNAME }}
+          WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
         run: |
-          mkdir guazai && echo "$WEBDAV_PASSWORD" | sudo mount -t davfs $WEBDAV_URL ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=$WEBDAV_USERNAME,password_stdin && cp -r caddy/* guazai/
+          mkdir guazai && echo "${{ secrets.WEBDAV_PASSWORD }}" | sudo mount -t davfs ${{ secrets.WEBDAV_URL }} ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=${{ secrets.WEBDAV_USERNAME }},password_stdin && cp -r caddy/* guazai/
