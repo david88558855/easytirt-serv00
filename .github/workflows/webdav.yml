@@ -33,9 +33,9 @@ jobs:
       - name: 检查仓库
         uses: actions/checkout@v3
 
-      # 安装 sshpass
-      - name: 安装 sshpass
-        run: sudo apt-get install -y sshpass
+      # 安装 cadaver
+      - name: 安装 cadaver
+        run: sudo apt-get install -y cadaver
 
       # 下载指定版本 easytier
       - name: 下载指定版本 easytier
@@ -88,12 +88,11 @@ jobs:
           mkdir -p caddy/EasytierGame/$EG
           wget -c -P caddy/EasytierGame/$EG https://github.com/EasyTier/EasytierGame/releases/download/${EG}/easytier-game_windows_x86_64_${EG}.zip
 
-      # 使用 curl 上传文件到 WebDAV
-      - name: 使用 curl 上传文件到 WebDAV
+      # 上传文件到 WebDAV
+      - name: 上传文件到 WebDAV
         env:
+          WEBDAV_URL: ${{ secrets.WEBDAV_URL }}
           WEBDAV_USERNAME: ${{ secrets.WEBDAV_USERNAME }}
           WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
         run: |
-          find caddy -type f | while read file; do
-            curl -T "$file" -u ${{ secrets.WEBDAV_USERNAME }}:${{ secrets.WEBDAV_PASSWORD }} "http://jgw.18999666.xyz:8088/webos/webdav/我的存储/admin/Downloads/${file#caddy/}"
-          done
+          echo "put -R caddy/* ." | cadaver "${WEBDAV_URL}"
