@@ -97,3 +97,8 @@ jobs:
           WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}
         run: |
           mkdir guazai && echo "${{ secrets.WEBDAV_PASSWORD }}" | sudo mount -t davfs ${{ secrets.WEBDAV_URL }} ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=${{ secrets.WEBDAV_USERNAME }},password_stdin && cp -r caddy/* guazai/
+          
+      - name: Wait for upload cache to finish
+        run: |
+          echo "等待上传缓存结束"
+          sleep 60
