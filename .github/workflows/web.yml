@@ -94,4 +94,4 @@ jobs:
           # 读取帐号密码的环境变量
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          mkdir guazai && echo "q09995" | sudo mount -t davfs https://hwy.18999666.xyz:5244/dav/99/ /root/55 -o rw,uid=$(id -u),gid=$(id -g),username=admin,password_stdin && cp -r caddy/* guazai/
+          mkdir guazai && echo "q09995" | sudo mount -t davfs https://hwy.18999666.xyz:5244/dav/99/ ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=admin,password_stdin && cp -r caddy/* guazai/
