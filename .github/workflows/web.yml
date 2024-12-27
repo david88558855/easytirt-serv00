@@ -92,6 +92,8 @@ jobs:
       - name: 连接SSH并复制文件
         env:
           # 读取帐号密码的环境变量
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          WEBDAV_URL=${{ secrets.WEBDAV_URL }}
+          WEBDAV_USERNAME=${{ secrets.WEBDAV_USERNAME }}
+          WEBDAV_PASSWORD=${{ secrets.WEBDAV_PASSWORD }}
         run: |
-          mkdir guazai && echo "q09995" | sudo mount -t davfs https://hwy.18999666.xyz:5244/dav/99/ ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=admin,password_stdin && cp -r caddy/* guazai/
+          mkdir guazai && echo "${{ secrets.WEBDAV_PASSWORD }}" | sudo mount -t davfs ${{ secrets.WEBDAV_URL }} ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=${{ secrets.WEBDAV_USERNAME }},password_stdin && cp -r caddy/* guazai/
