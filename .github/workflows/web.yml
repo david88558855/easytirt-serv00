@@ -96,4 +96,4 @@ jobs:
           WEBDAV_USERNAME=${{ secrets.WEBDAV_USERNAME }}
           WEBDAV_PASSWORD=${{ secrets.WEBDAV_PASSWORD }}
         run: |
-          mkdir guazai && echo "${{ secrets.WEBDAV_PASSWORD }}" | sudo mount -t davfs ${{ secrets.WEBDAV_URL }} ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=${{ secrets.WEBDAV_USERNAME }},password_stdin && cp -r caddy/* guazai/
+          mkdir guazai && echo "$WEBDAV_PASSWORD" | sudo mount -t davfs $WEBDAV_URL ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=$WEBDAV_USERNAME,password_stdin && cp -r caddy/* guazai/
