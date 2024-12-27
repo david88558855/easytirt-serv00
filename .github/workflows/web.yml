@@ -1,4 +1,4 @@
-name: 复制到服务器
+name: 复制到webdav服务器
 
 on:
   workflow_dispatch:
