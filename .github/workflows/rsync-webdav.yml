@@ -35,7 +35,11 @@ jobs:
 
       # 安装 davfs2
       - name: 安装 davfs2
-        run: sudo apt install -y davfs2 rsync
+        run: sudo apt install -y davfs2
+
+      # 安装 rsync
+      - name: 安装 davfs2
+        run: sudo apt install -y rsync
 
       # 下载指定版本 easytier
       - name: 下载指定版本 easytier
@@ -96,7 +100,8 @@ jobs:
           WEBDAV_USERNAME: ${{ secrets.WEBDAV_USERNAME }}
           WEBDAV_PASSWORD: ${{ secrets.WEBDAV_PASSWORD }}   
         run: |
-          mkdir guazai && echo "${{ secrets.WEBDAV_PASSWORD }}" | sudo mount -t davfs -o use_upload_buffer=0,cache_size=0 ${{ secrets.WEBDAV_URL }} ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=${{ secrets.WEBDAV_USERNAME }},password_stdin && rsync -avz --info=progress2 caddy/ /guazai/
+          mkdir guazai && echo "${{ secrets.WEBDAV_PASSWORD }}" | sudo mount -t davfs -o use_upload_buffer=0,cache_size=0 ${{ secrets.WEBDAV_URL }} ./guazai -o rw,uid=$(id -u),gid=$(id -g),username=${{ secrets.WEBDAV_USERNAME }},password_stdin && \
+          rsync -avz --info=progress2 caddy/ guazai/
           
       - name: Wait for copy to finish
         run: |
