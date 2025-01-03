@@ -88,8 +88,8 @@ jobs:
           mkdir -p caddy/EasytierGame/$EG
           wget -c -P caddy/EasytierGame/$EG https://github.com/EasyTier/EasytierGame/releases/download/${EG}/easytier-game_windows_x86_64_${EG}.zip
 
-      # 连接 SSH 并复制文件
-      - name: 连接SSH并复制文件
+      # 连接 FTP 并复制文件
+      - name: 连接FTP并复制文件
         env:
           # 读取帐号密码的环境变量
           FTP_URL: ${{ secrets.FTP_URL }}
@@ -102,5 +102,4 @@ jobs:
         run: |
           echo "等待文件拷贝到远程文件夹"
           sleep 30
-          done
           echo "文件拷贝已完成！"
